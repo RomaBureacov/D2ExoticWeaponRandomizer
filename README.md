@@ -40,7 +40,7 @@ Examples:
 
 * Microcosm,Kinetic,Power,Power,Trace Rifle
 
-For formatting, you can start lines with *#* to form comments in the csv file if need be. 
+In addition, you can start lines with *#* to form comments in the csv file if need be. 
 Empty lines are also allowed for spacing if need be. 
 The very first line is ignored in the csv to work around the Byte Order Mark (BOM).
 
