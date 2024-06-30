@@ -1,4 +1,6 @@
-﻿Final Warning,Strand,Kinetic,Primary,Sidearm
+﻿# starting lines with the # sign are ignored and served as comments
+# Kinetic-slot weapons
+Final Warning,Strand,Kinetic,Primary,Sidearm
 Monte Carlo,Kinetic,Kinetic,Primary,Auto Rifle
 Outbreak Perfected,Kinetic,Kinetic,Primary,Pulse Rifle
 Necrocasm,Kinetic,Kinetic,Primary,Auto Rifle
@@ -39,6 +41,7 @@ The Chaperone,Kinetic,Kinetic,Special,Shotgun
 Conditional Finality,Stasis,Kinetic,Special,Shotgun
 Forerunner,Kinetic,Kinetic,Special,Sidearm
 Ager's Scepter,Stasis,Kinetic,Special,Trace Rifle
+# Energy weapons
 Fighting Lion,Void,Energy,Primary,Breech Grenade Launcher
 Edge of Action,Void,Energy,Special,Glaive
 Edge of Intent,Solar,Energy,Special,Glaive
@@ -82,6 +85,7 @@ Coldheart,Arc,Energy,Special,Sniper Rifle
 Prometheus Lens,Solar,Energy,Special,Trace Rifle
 Ruinous Effigy,Void,Energy,Special,Trace Rifle
 Wavesplitter,Void,Energy,Special,Trace Rifle
+# Power weapons
 Parasite,Solar,Power,Power,Grenade Launcher
 Dragon's Breath,Solar,Power,Power,Rocket Launcher
 Legend of Acrius,Arc,Power,Power,Shotgun

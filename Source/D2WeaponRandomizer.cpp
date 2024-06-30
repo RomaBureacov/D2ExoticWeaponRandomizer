@@ -48,13 +48,33 @@ vector<string> buildList(const vector<weapon>& master, const vector<string>& ele
 	
 	// build the list using the restriction specified
 	for (const weapon& w : master) { // for each weapon
-		if (search(element, w.element)
+		if (w.element.find("/") != string::npos) { // if weapon is multi-elemental
+
+			if (search(slot, w.slot) // first check if the weapon matches other criteria
+				&& search(ammo, w.ammo)
+				&& search(type, w.type)) {
+				// check each element if it's in the desired elements
+				vector<string> elements;
+				string token;
+				istringstream tokenStream(w.element);
+				while (getline(tokenStream, token, '/' ))
+					elements.push_back(token);
+				
+				for (const string &weapon_subElement : elements) { // search for each element in desired list
+					
+					if (search(element, weapon_subElement)) {
+						product.push_back(w.name);
+						break;
+					}
+				}
+
+			}
+		} else if (search(element, w.element)
 			&& search(slot, w.slot)
 			&& search(ammo, w.ammo)
 			&& search(type, w.type))
 			product.push_back(w.name);
 	}
-
 
 	return product;
 }
@@ -63,8 +83,11 @@ vector<string> buildList(const vector<weapon>& master, const vector<string>& ele
 vector<weapon> buildMaster(ifstream& stream) {
 	vector<weapon> master;
 	string line;
-	
+
+	getline(stream, line); // skip first line to pass the Byte Order Mark (BOM)
 	while (getline(stream, line)) {
+		if (line.empty() || line[0] == '#') continue; // skip if line is empty or comment
+
 		vector<string> tokens;
 		string token;
 		istringstream tokenStream(line);
@@ -103,11 +126,17 @@ vector<string> getDesired(const vector<string> options, string type) {
 					else if (input == "any" || input == "Any") {
 						chooseAll = true;
 						desiredOptions.push_back(op);
-					} else if (input == "null" || input == "Null") nullAll = true;
+					} else if (input == "null" || input == "Null") {
+						if (desiredOptions.size() == 0) {
+							cout << "|ERROR: You must choose at least 1 option before nullifying the rest" << endl;
+						} else 
+							nullAll = true;
+					}
 				} while (input != "y" && input != "Y"
 					   && input != "n" && input != "N"
 					   && input != "any" && input != "Any"
-					   && input != "null" && input != "Null"); // repeat while input invalid
+					   && input != "null" && input != "Null" // repeat while input invalid
+					   || desiredOptions.size() == 0 && (input == "null" || input == "Null")); // and while the options list is empty and null is decided
 			}
 		}
 	} while (desiredOptions.size() <= 0);
@@ -143,9 +172,9 @@ int main() {
 		vector<string> ammo = { "Primary", "Special", "Power" };
 		vector<string> primaries = { "Hand Cannon", "Sidearm", "Bow", "Scout Rifle", "Pulse Rifle", "Auto Rifle", "Submachine Gun" };
 		vector<string> specials = { "Sniper Rifle", "Breech Grenade launcher", "Shotgun", "Trace Rifle", "Fusion Rifle", "Glaive",
-									"Sidearm", "Hand Cannon" }; // exceptions
+									"Sidearm", "Hand Cannon", "Linear Fusion Rifle", "Sword"}; // exceptions
 		vector<string> heavies = { "Machine Gun", "Rocket Launcher", "Sword", "Grenade Launcher", "Linear Fusion Rifle",
-									"Fusion Rifle", "Sniper Rifle", "Shotgun", "Bow", "Glaive" }; // exceptions
+									"Fusion Rifle", "Sniper Rifle", "Shotgun", "Bow", "Glaive", "Trace Rifle"}; // exceptions
 
 		// get the desired slots for the weapons
 		vector<string> desired_slots = getDesired(slots, "slots");
@@ -193,7 +222,7 @@ int main() {
 			srand(time(0));
 
 			do {
-				cout << list.size() << " possible rolls; You rolled: ";
+				cout << list.size() << " possible roll" << (list.size() > 1 ? "s" : "") << "; You rolled: ";
 				for (int i = 0; i < 3; i++) {
 					this_thread::sleep_for(chrono::milliseconds(1000));
 					cout << ". ";
