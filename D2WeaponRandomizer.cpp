@@ -125,7 +125,14 @@ bool containing(const vector<string> &vect, const string& key) {
 
 int main() {
 	// create the master list
-	ifstream stream("..\\WeaponsList.csv");
+	ifstream stream("WeaponsList.csv");
+	
+	if (!stream) {
+		cout << "Failed to find WeaponsList.csv, Exiting Program..." << endl;
+		system("Pause");
+		return -1;
+	}
+	
 	vector<weapon> master = buildMaster(stream);
 	
 	string input;
@@ -156,12 +163,15 @@ int main() {
 
 		// get the desired ammos for the weapons
 		vector<string> desired_ammos;
+
 		if (!containing(desired_slots, "Kinetic") && !containing(desired_slots, "Energy")) { // exclude primary and special ammo should their slots not be desired
 			ammo.erase(ammo.begin() + 0);
 			ammo.erase(ammo.begin() + 0);
 			desired_ammos = ammo;
-		} else if (!containing(desired_slots, "Power")) {
-			ammo.erase(ammo.begin() + 2); // exclude power ammo should the power slot not be desired
+		} else  {
+			if (!containing(desired_slots, "Power"))
+				ammo.erase(ammo.begin() + 2); // exclude power ammo should the power slot not be desired
+
 			desired_ammos = getDesired(ammo, "ammos");
 		}
 
@@ -170,6 +180,7 @@ int main() {
 		if (containing(desired_ammos, "Primary")) types.insert(types.begin(), primaries.begin(), primaries.end());
 		if (containing(desired_ammos, "Special")) types.insert(types.begin(), specials.begin(), specials.end());
 		if (containing(desired_ammos, "Power")) types.insert(types.begin(), heavies.begin(), heavies.end());
+		
 		vector<string> desired_types = getDesired(types, "types");
 
 
@@ -196,8 +207,10 @@ int main() {
 		// prompt to restart
 		do {
 			cout << endl << endl << "Would you like to change parameters? (y/quit)" << endl;
-			cin >> input;
+			cin >> input; 
+			cout << endl;
 		} while (input != "y" && input != "quit");
+		
 
 	} while (input != "quit");
 
