@@ -25,15 +25,34 @@
 using namespace std;
 
 struct weapon {
-	string name,
+	string 
+		name,
 		element,
 		ammo,
 		slot,
 		type;
 };
 
+struct params {
+	vector<string> 
+		elements,
+		slots,
+		ammo,
+		primaries,
+		specials,
+		heavies;
+};
+
+// prototype functions
+bool search(const vector<string>&, const string&);
+vector<string> buildList(const vector<weapon>&, const vector<string>&, const vector<string>&, const vector<string>&, const vector<string>&);
+vector<weapon> buildMaster(ifstream&);
+params buildParams(const vector<weapon>&);
+vector<string> getDesired(const vector<string>&, const string&);
+bool containing(const vector<string>&, const string&);
+
 // quick regex search
-bool search(const vector<string> &params, string attribute) {
+bool search(const vector<string> &params, const string &attribute) {
 	for (const string& pa : params) { // for each element specified
 		regex rx(pa, regex_constants::icase);
 		if (regex_search(attribute, rx)) return true;
@@ -107,7 +126,24 @@ vector<weapon> buildMaster(ifstream& stream) {
 	return master;
 }
 
-vector<string> getDesired(const vector<string> options, string type) {
+// build params primary, special, and power weapon types lists based off of the master list
+params buildParams(const vector<weapon> &master) {
+	params parameters;
+	parameters.elements = { "Kinetic", "Stasis", "Strand" }; // assume initially that the user only wants kinetic-slot weapons
+	parameters.slots = { "Kinetic", "Energy", "Power" };
+	parameters.ammo = { "Primary", "Special", "Power" };
+
+	// build weapon types
+	for (weapon w : master) {
+		if (w.ammo == "Primary" && !containing(parameters.primaries, w.type)) parameters.primaries.push_back(w.type);
+		else if (w.ammo == "Special" && !containing(parameters.specials, w.type)) parameters.specials.push_back(w.type);
+		else if (w.ammo == "Power" && !containing(parameters.heavies, w.type)) parameters.heavies.push_back(w.type);	
+	}
+
+	return parameters;
+}
+
+vector<string> getDesired(const vector<string> &options, const string &type) {
 	string input;
 	vector<string> desiredOptions;
 
@@ -145,7 +181,9 @@ vector<string> getDesired(const vector<string> options, string type) {
 	return desiredOptions;
 }
 
-bool containing(const vector<string> &vect, const string& key) {
+bool containing(const vector<string> &vect, const string &key) {
+	if (vect.size() == 0) return false;
+	
 	for (string hole : vect) {
 		if (key == hole) return true;
 	}
@@ -162,53 +200,52 @@ int main() {
 		return -1;
 	}
 	
+	// build master list
 	vector<weapon> master = buildMaster(stream);
 	
+	// build parameters list
+	params parameters = buildParams(master);
+	
+
 	string input;
 	do {
 		// ask the user for input	
-		vector<string> elements = { "Kinetic", "Stasis", "Strand" }; // assume initially that the user only wants kinetic-slot weapons
-		vector<string> slots = { "Kinetic", "Energy", "Power" };
-		vector<string> ammo = { "Primary", "Special", "Power" };
-		vector<string> primaries = { "Hand Cannon", "Sidearm", "Bow", "Scout Rifle", "Pulse Rifle", "Auto Rifle", "Submachine Gun" };
-		vector<string> specials = { "Sniper Rifle", "Breech Grenade launcher", "Shotgun", "Trace Rifle", "Fusion Rifle", "Glaive",
-									"Sidearm", "Hand Cannon", "Linear Fusion Rifle", "Sword"}; // exceptions
-		vector<string> heavies = { "Machine Gun", "Rocket Launcher", "Sword", "Grenade Launcher", "Linear Fusion Rifle",
-									"Fusion Rifle", "Sniper Rifle", "Shotgun", "Bow", "Glaive", "Trace Rifle"}; // exceptions
+		// create copy of parameters
+		params parameters_copy = parameters;
 
 		// get the desired slots for the weapons
-		vector<string> desired_slots = getDesired(slots, "slots");
+		vector<string> desired_slots = getDesired(parameters_copy.slots, "slots");
 
 		// get the desired elements for the weapons
 		if (containing(desired_slots, "Energy") || containing(desired_slots, "Power")) { // include other elements should energy and/or Power slots are desired
-			elements.push_back("Solar");
-			elements.push_back("Void");
-			elements.push_back("Arc");
+			parameters_copy.elements.push_back("Solar");
+			parameters_copy.elements.push_back("Void");
+			parameters_copy.elements.push_back("Arc");
 		}
 		if (!containing(desired_slots, "Kinetic")) { // if kinetic-slot is excluded in any way
-			elements.erase(elements.begin() + 0); // remove kinetic option
+			parameters_copy.elements.erase(parameters_copy.elements.begin() + 0); // remove kinetic option
 		}
-		vector<string> desired_elements = getDesired(elements, "elements");
+		vector<string> desired_elements = getDesired(parameters_copy.elements, "elements");
 
 		// get the desired ammos for the weapons
 		vector<string> desired_ammos;
 
 		if (!containing(desired_slots, "Kinetic") && !containing(desired_slots, "Energy")) { // exclude primary and special ammo should their slots not be desired
-			ammo.erase(ammo.begin() + 0);
-			ammo.erase(ammo.begin() + 0);
-			desired_ammos = ammo;
+			parameters_copy.ammo.erase(parameters_copy.ammo.begin() + 0);
+			parameters_copy.ammo.erase(parameters_copy.ammo.begin() + 0);
+			desired_ammos = parameters_copy.ammo;
 		} else  {
 			if (!containing(desired_slots, "Power"))
-				ammo.erase(ammo.begin() + 2); // exclude power ammo should the power slot not be desired
+				parameters_copy.ammo.erase(parameters_copy.ammo.begin() + 2); // exclude power ammo should the power slot not be desired
 
-			desired_ammos = getDesired(ammo, "ammos");
+			desired_ammos = getDesired(parameters_copy.ammo, "ammos");
 		}
 
 		// get the desired types for the weapons
 		vector<string> types;
-		if (containing(desired_ammos, "Primary")) types.insert(types.begin(), primaries.begin(), primaries.end());
-		if (containing(desired_ammos, "Special")) types.insert(types.begin(), specials.begin(), specials.end());
-		if (containing(desired_ammos, "Power")) types.insert(types.begin(), heavies.begin(), heavies.end());
+		if (containing(desired_ammos, "Primary")) types.insert(types.begin(), parameters_copy.primaries.begin(), parameters_copy.primaries.end());
+		if (containing(desired_ammos, "Special")) types.insert(types.begin(), parameters_copy.specials.begin(), parameters_copy.specials.end());
+		if (containing(desired_ammos, "Power")) types.insert(types.begin(), parameters_copy.heavies.begin(), parameters_copy.heavies.end());
 		
 		vector<string> desired_types = getDesired(types, "types");
 

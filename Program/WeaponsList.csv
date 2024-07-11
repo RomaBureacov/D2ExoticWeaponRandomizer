@@ -2,6 +2,13 @@
 # starting lines with the # sign are ignored and served as comments
 # format: name, element, slot, ammo, type
 
+# Possible args
+# name: anything (the name of the weapon)
+# element: Kinetic, Solar, Void, Arc, Stasis, Strand
+# slot: Kinetic, Energy, Power
+# ammo: Primary, Special, Power
+# type: Auto Rifle, Pulse Rifle, Scout Rifle, Hand Cannon, Submachine Gun, Sidearm, Bow, Fusion Rifle, Linear Fusion Rifle, Trace Rifle, Shotgun, Sniper Rifle, Breech Grenade Launcher, Grenade Launcher, Machine Gun, Rocket Launcher, Sword
+
 # Kinetic-slot weapons
 Final Warning,Strand,Kinetic,Primary,Sidearm
 Monte Carlo,Kinetic,Kinetic,Primary,Auto Rifle

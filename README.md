@@ -2,7 +2,7 @@
 A simple command-line program for randomizing which exotic weapon to use.
 
 # Use
-Under **Program**, download *WeaponsList.csv* and *D2WeaponRandomizer.exe*. The file *D2WeaponRandomizer.cpp* is the source code, if you wish to review it, modify it, or compile it yourself.
+Under **Program**, download *WeaponsList.csv* and *D2WeaponRandomizer.exe*. The file *D2WeaponRandomizer.cpp* is the source code—should you wish to review it, modify it, or compile it yourself.
 
 Download both required files, the *.exe* and *.csv*, into the same location, and then run the executable.
 
@@ -10,24 +10,25 @@ Download both required files, the *.exe* and *.csv*, into the same location, and
 
 | Command | Description |
 | ------- | ----------- |
-| y or Y  | Confirms the selection |
-| n or N  | Rejects the selection  |
-| any or Any | Confirms the current and all subsequent selections |
-| null or Null | Rejects the current and all subsequent selections |
+| y or Y  | Confirms the current option |
+| n or N  | Rejects the current option  |
+| any or Any | Confirms the current and all subsequent options |
+| null or Null | Rejects the current and all subsequent options |
 
-Note that the WeaponsList.csv is required to be in the same location and properly formatted as the executable or compiled program. 
-If a new weapon is appended to the game, append the said weapon to the csv. 
-If a new weapon type is appended to the game, the source code will need to be modified to justify such. I will attempt to update this program in such events.
+Note that the *WeaponsList.csv* is required to be in the same location and properly formatted as the executable or compiled program. 
+If a new weapon is appended to the game, append the said weapon to the csv if it does not already exist in the csv. 
 
 # Custom Items
 If you wish to update the list yourself, or append some other items, then append items in the *WeaponsList.csv* under **Program**.
 
-The format for adding additional weapons is:
+Note that, if you wish, you can replace the list with your own custom list of Destiny 2 weapons or append non-exotic weapons to the list. The only requirement is that the format is obeyed, the file name remains as *WeaponsList.csv*, and that the file remains in the same location as the executable program.
+
+The format for adding additional weapons or creating your own list is:
 
 | Order | Item | Possible Arguments | Description |
 | ----- | ---- | ------------------ | ------------ |
 | 1     | Name | *Anything* | Name of the weapon |
-| 2     | Element | Kinetic, Solar, Void, Arc, Stasis, Strand | Element of the weapon. May be separated by */* if more than one element applies, such as Hard Light |
+| 2     | Element | Kinetic, Solar, Void, Arc, Stasis, Strand | Element of the weapon. May be separated by */* if more than one element applies, such as with Hard Light |
 | 3     | Slot | Kinetic, Energy, Power | What slot the weapon is in |
 | 4     | Ammo | Primary, Special, Power | What ammo type the weapon uses |
 | 5     | Type | Auto Rifle, Pulse Rifle, Scout Rifle, Hand Cannon, Submachine Gun, Sidearm, Bow, Fusion Rifle, Linear Fusion Rifle, Trace Rifle, Shotgun, Sniper Rifle, Breech Grenade Launcher, Grenade Launcher, Machine Gun, Rocket Launcher, Sword | What type of weapon it is |
