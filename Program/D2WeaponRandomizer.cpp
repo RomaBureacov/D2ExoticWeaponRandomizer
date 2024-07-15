@@ -19,6 +19,8 @@
 #include<ctime>
 #include<sstream>
 
+#include<random>
+
 #include<chrono>
 #include<thread>
 
@@ -50,6 +52,7 @@ vector<weapon> buildMaster(ifstream&);
 params buildParams(const vector<weapon>&);
 vector<string> getDesired(const vector<string>&, const string&);
 bool containing(const vector<string>&, const string&);
+int rInt(const int &, const int &);
 
 // quick regex search
 bool search(const vector<string> &params, const string &attribute) {
@@ -181,6 +184,7 @@ vector<string> getDesired(const vector<string> &options, const string &type) {
 	return desiredOptions;
 }
 
+// find string key in vector vect
 bool containing(const vector<string> &vect, const string &key) {
 	if (vect.size() == 0) return false;
 	
@@ -188,6 +192,14 @@ bool containing(const vector<string> &vect, const string &key) {
 		if (key == hole) return true;
 	}
 	return false;
+}
+
+// create a random integer
+int rInt(const int &lowerBound, const int &upperBound) {
+	random_device device;
+	mt19937 engine(device());
+	uniform_int_distribution<> distribution(lowerBound, upperBound);
+	return distribution(engine);
 }
 
 int main() {
@@ -256,8 +268,6 @@ int main() {
 		if (list.size() == 0) {
 			cout << "There are 0 possible rolls, please try a different set of parameters." << endl;
 		} else {
-			srand(time(0));
-
 			do {
 				cout << list.size() << " possible roll" << (list.size() > 1 ? "s" : "") << "; You rolled: ";
 				for (int i = 0; i < 3; i++) {
@@ -265,7 +275,7 @@ int main() {
 					cout << ". ";
 				}
 				this_thread::sleep_for(chrono::milliseconds(1000));
-				cout << list[rand() % list.size()] << "!" << endl;
+				cout << list[rInt(0, list.size() - 1)] << "!" << endl;
 				cout << "Roll again? (Y/N): "; cin >> input;
 			} while (input != "N" && input != "n");
 		}

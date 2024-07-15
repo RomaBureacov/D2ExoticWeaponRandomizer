@@ -9,6 +9,7 @@
 # ammo: Primary, Special, Power
 # type: Auto Rifle, Pulse Rifle, Scout Rifle, Hand Cannon, Submachine Gun, Sidearm, Bow, Fusion Rifle, Linear Fusion Rifle, Trace Rifle, Shotgun, Sniper Rifle, Breech Grenade Launcher, Grenade Launcher, Machine Gun, Rocket Launcher, Sword
 
+
 # Kinetic-slot weapons
 Final Warning,Strand,Kinetic,Primary,Sidearm
 Monte Carlo,Kinetic,Kinetic,Primary,Auto Rifle
@@ -132,7 +133,7 @@ Heartshadow,Void,Power,Power,Sword
 # Exotics added since The Final Shape
 Khvostov 7G-0X,Kinetic,Kinetic,Primary,Auto Rifle
 Red Death,Solar,Energy,Primary,Pulse Rifle
-Still hunt,Solar,Energy,Special,Sniper Rifle
+Still Hunt,Solar,Energy,Special,Sniper Rifle
 Ergo Sum,Solar/Void/Arc,Energy,Special,Sword
 Microcosm,Kinetic,Power,Power,Trace Rifle
 Euphony,Strand,Kinetic,Special,Linear Fusion Rifle
