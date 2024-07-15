@@ -132,7 +132,7 @@ vector<weapon> buildMaster(ifstream& stream) {
 // build params primary, special, and power weapon types lists based off of the master list
 params buildParams(const vector<weapon> &master) {
 	params parameters;
-	parameters.elements = { "Kinetic", "Stasis", "Strand" }; // assume initially that the user only wants kinetic-slot weapons
+	parameters.elements = { "Kinetic", "Stasis", "Strand" }; // assume initially that the user only wants kinetic- or power-slot weapons
 	parameters.slots = { "Kinetic", "Energy", "Power" };
 	parameters.ammo = { "Primary", "Special", "Power" };
 
@@ -187,7 +187,7 @@ vector<string> getDesired(const vector<string> &options, const string &type) {
 // find string key in vector vect
 bool containing(const vector<string> &vect, const string &key) {
 	if (vect.size() == 0) return false;
-	
+
 	for (string hole : vect) {
 		if (key == hole) return true;
 	}
@@ -205,19 +205,19 @@ int rInt(const int &lowerBound, const int &upperBound) {
 int main() {
 	// create the master list
 	ifstream stream("WeaponsList.csv");
-	
+
 	if (!stream) {
 		cout << "Failed to find WeaponsList.csv, Exiting Program..." << endl;
 		system("Pause");
 		return -1;
 	}
-	
+
 	// build master list
 	vector<weapon> master = buildMaster(stream);
-	
+
 	// build parameters list
 	params parameters = buildParams(master);
-	
+
 
 	string input;
 	do {
@@ -230,12 +230,13 @@ int main() {
 
 		// get the desired elements for the weapons
 		if (containing(desired_slots, "Energy") || containing(desired_slots, "Power")) { // include other elements should energy and/or Power slots are desired
+			if (desired_slots.size() == 1 && containing(desired_slots, "Energy")) { // if only energy weapons are desired, exlude kinetic, stasis, strand
+				parameters_copy.elements.clear();
+			}
+			
 			parameters_copy.elements.push_back("Solar");
 			parameters_copy.elements.push_back("Void");
 			parameters_copy.elements.push_back("Arc");
-		}
-		if (!containing(desired_slots, "Kinetic")) { // if kinetic-slot is excluded in any way
-			parameters_copy.elements.erase(parameters_copy.elements.begin() + 0); // remove kinetic option
 		}
 		vector<string> desired_elements = getDesired(parameters_copy.elements, "elements");
 
@@ -246,7 +247,7 @@ int main() {
 			parameters_copy.ammo.erase(parameters_copy.ammo.begin() + 0);
 			parameters_copy.ammo.erase(parameters_copy.ammo.begin() + 0);
 			desired_ammos = parameters_copy.ammo;
-		} else  {
+		} else {
 			if (!containing(desired_slots, "Power"))
 				parameters_copy.ammo.erase(parameters_copy.ammo.begin() + 2); // exclude power ammo should the power slot not be desired
 
@@ -258,7 +259,7 @@ int main() {
 		if (containing(desired_ammos, "Primary")) types.insert(types.begin(), parameters_copy.primaries.begin(), parameters_copy.primaries.end());
 		if (containing(desired_ammos, "Special")) types.insert(types.begin(), parameters_copy.specials.begin(), parameters_copy.specials.end());
 		if (containing(desired_ammos, "Power")) types.insert(types.begin(), parameters_copy.heavies.begin(), parameters_copy.heavies.end());
-		
+
 		vector<string> desired_types = getDesired(types, "types");
 
 
@@ -276,7 +277,9 @@ int main() {
 				}
 				this_thread::sleep_for(chrono::milliseconds(1000));
 				cout << list[rInt(0, list.size() - 1)] << "!" << endl;
-				cout << "Roll again? (Y/N): "; cin >> input;
+				do {
+					cout << "|Roll again? (Y/N): "; cin >> input;
+				} while ((input != "Y" && input != "y") && (input != "N" && input != "n"));
 			} while (input != "N" && input != "n");
 		}
 
