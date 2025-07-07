@@ -1,5 +1,7 @@
 # D2ExoticWeaponRandomizer
-A simple command-line program for randomizing which exotic weapon to use.
+Destiny 2 Exotic Weapon Randomizer. Acts as a random wheel to choose your next exotic using simple command prompt arguments.
+
+Intended for choosing a random exotic on your next outing based on custom parameters specified.
 
 # Use
 Under **Program**, download *WeaponsList.csv* and *D2WeaponRandomizer.exe*. The file *D2WeaponRandomizer.cpp* is the source code—should you wish to review it, modify it, or compile it yourself.
